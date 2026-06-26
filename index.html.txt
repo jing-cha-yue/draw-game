@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>小熊铃兰 · 双人绘画</title>
+  <!-- 字体与基础图标 (Font Awesome 免费版) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      background: #f7f2ed;  /* 奶油基底 */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px 12px 20px;
+    }
+    /* 主卡片 – 软萌铃兰风 */
+    .app-container {
+      max-width: 420px;
+      width: 100%;
+      background: #fffcf9;
+      border-radius: 48px 48px 32px 32px;
+      box-shadow: 0 12px 30px rgba(180, 140, 120, 0.15);
+      padding: 20px 16px 28px;
+      border: 2px solid #f0ded5;
+      position: relative;
+      backdrop-filter: blur(2px);
+      transition: all 0.2s;
+    }
+    /* 铃兰小熊装饰 */
+    .header-deco {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .header-deco h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: #7f5a4b;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-deco h1 i {
+      color: #b48d7a;
+      font-size: 2rem;
+    }
+    .bear-icon {
+      background: #f1e3db;
+      padding: 8px 14px;
+      border-radius: 60px;
+      color: #7f5a4b;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: inset 0 -2px 0 #dcc8bc;
+    }
+    .bear-icon i {
+      margin-right: 6px;
+    }
+    /* 素材库卡片 */
+    .material-bar {
+      background: #f6ede8;
+      border-radius: 40px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border: 1px solid #e6d5cb;
+      flex-wrap: wrap;
+    }
+    .material-bar span {
+      font-weight: 500;
+      color: #5a3f34;
+      font-size: 0.95rem;
+    }
+    .material-bar i {
+      color: #b48d7a;
+      margin: 0 4px;
+    }
+    .material-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    .material-buttons button {
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      color: #7f5a4b;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 4px 6px;
+      border-radius: 30px;
+    }
+    .material-buttons button:hover {
+      background: #e6d5cb;
+    }
+    /* 画布区 */
+    .canvas-wrapper {
+      background: #fcf8f5;
+      border-radius: 40px;
+      padding: 12px;
+      border: 2px dashed #dcc8bc;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(150, 110, 90, 0.08);
+    }
+    #drawCanvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      background: white;
+      border-radius: 28px;
+      touch-action: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      cursor: crosshair;
+    }
+    /* 分割控制条 */
+    .split-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 12px 0 16px;
+    }
+    .split-btn {
+      background: #efe5df;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #4d3a30;
+      box-shadow: 0 2px 0 #d6c2b6;
+      transition: 0.1s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .split-btn.active {
+      background: #c9b0a2;
+      color: #2d211b;
+      box-shadow: 0 2px 0 #aa8c7c;
+    }
+    .split-btn i {
+      font-size: 1rem;
+    }
+    .split-btn:active {
+      transform: scale(0.96);
+    }
+    /* 绘画工具 */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px 12px;
+      background: #f6ede8;
+      padding: 14px 12px;
+      border-radius: 80px;
+      margin: 14px 0 16px;
+      border: 1px solid #e2d0c5;
+    }
+    .tool-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: #5f4338;
+      padding: 6px 8px;
+      border-radius: 40px;
+      transition: 0.1s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+    }
+    .tool-btn.active-tool {
+      background: #dcc8bc;
+      color: #2d1f19;
+      box-shadow: inset 0 -2px 0 #b19382;
+    }
+    .tool-btn i {
+      font-size: 1.6rem;
+    }
+    .color-picker-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 2px 12px 2px 6px;
+      border-radius: 60px;
+      border: 1px solid #dcc8bc;
+    }
+    #colorPicker {
+      width: 34px;
+      height: 34px;
+      border:
